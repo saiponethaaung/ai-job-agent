@@ -38,7 +38,7 @@ AI job agent
 - bun install
 - bun dev
 
-# Prisma
+## Prisma
 
 - bun prisma generate
 - bun prisma migrate dev
