@@ -1,0 +1,68 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""User model"""
+type User {
+  """Unique identifier for the user"""
+  id: String!
+
+  """Email for the user"""
+  email: String!
+
+  """First name for the user"""
+  firstName: String!
+
+  """Last name for the user"""
+  lastName: String!
+
+  """Created at date for the user"""
+  createdAt: DateTime!
+
+  """Updated at date for the user"""
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Company model"""
+type Company {
+  """Unique identifier for the company"""
+  id: String!
+
+  """Company name"""
+  name: String!
+
+  """Company website"""
+  website: String!
+
+  """Created at date for the user"""
+  createdAt: DateTime!
+
+  """Updated at date for the user"""
+  updatedAt: DateTime!
+}
+
+type Query {
+  """Get the current user"""
+  user: User!
+
+  """Get all companies"""
+  companies: [Company!]!
+}
+
+type Mutation {
+  """Create a new company"""
+  createCompany(createCompanyData: CreateCompanyArgs!): Company!
+}
+
+input CreateCompanyArgs {
+  """Company name"""
+  name: String!
+
+  """Company website"""
+  website: String!
+}
