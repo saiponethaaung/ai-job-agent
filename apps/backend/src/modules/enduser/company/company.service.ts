@@ -7,6 +7,8 @@ export class CompanyService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createCompany(data: Prisma.CompanyCreateInput) {
+    const url = new URL(data.website);
+    data.website = url.protocol + '//' + url.host;
     return await this.prismaService.company.create({ data });
   }
 }

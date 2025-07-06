@@ -13,6 +13,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum LinkScrapeStatus {
+  pending
+  scrapped
+  error
+}
+
+enum LinkType {
+  internal
+  scoial
+  news
+  forum
+  unknown
+}
+
 model Admin {
   id        String    @id @default(uuid(7))
   email     String    @unique
@@ -48,8 +62,54 @@ model Company {
   verifiedById String? @map("verified_by_id")
   verifiedBy   Admin?  @relation(fields: [verifiedById], references: [id])
 
+  processAt    DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  companyLinks CompanyLink[]
+
+  @@map("company")
+}
+
+model CompanyLink {
+  id    String  @id @default(uuid(7))
+  link  String
+  error String?
+
+  linkType               LinkType         @map("link_type")
+  status                 LinkScrapeStatus @default(pending)
+  isRequiredVerification Boolean          @default(false) @map("is_required_verification")
+  processed              Boolean          @default(false)
+
+  companyId String  @map("company_id")
+  company   Company @relation(fields: [companyId], references: [id])
+
+  contents CompanyLinkContent[]
+
+  scrappedStart DateTime? @map("scrapped_start")
+  scrappedEnd   DateTime? @map("scrapped_end")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  @@map("company")
+  @@map("company_link")
+}
+
+model CompanyLinkContent {
+  id String @id @default(uuid(7))
+
+  content          String
+  processedContent String?
+
+  companyLinkId String      @map("company_link_id")
+  companyLink   CompanyLink @relation(fields: [companyLinkId], references: [id])
+
+  // Only update the content if checksum is diff
+  checksum String?
+  isDigest Boolean @default(false) @map("is_digest")
+
+  processed DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+
+  @@map("company_link_content")
 }
