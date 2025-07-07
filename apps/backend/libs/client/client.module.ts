@@ -1,29 +1,23 @@
 import { Global, Module } from '@nestjs/common';
-// import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Global()
 @Module({
   imports: [
-    // ClientsModule.registerAsync({
-    //   clients: [
-    //     {
-    //       name: 'SCRAPER',
-    //       useFactory: () => ({
-    //         transport: Transport.KAFKA,
-    //         options: {
-    //           client: {
-    //             clientId: 'scraper',
-    //             brokers: ['localhost:9092'],
-    //           },
-    //           consumer: {
-    //             groupId: 'scraper-consumer',
-    //           },
-    //         },
-    //       }),
-    //     },
-    //   ],
-    // }),
+    ClientsModule.register([
+      {
+        name: 'SCRAPER',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'scraper-client',
+            brokers: ['localhost:9092'],
+          },
+        },
+      },
+    ]),
   ],
+  exports: [ClientsModule],
 })
 export class ClientModule {
   constructor() {}

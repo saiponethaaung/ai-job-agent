@@ -24,6 +24,10 @@ enum LinkType {
   scoial
   news
   forum
+  image
+  document
+  video
+  audio
   unknown
 }
 
@@ -79,17 +83,22 @@ model CompanyLink {
   status                 LinkScrapeStatus @default(pending)
   isRequiredVerification Boolean          @default(false) @map("is_required_verification")
   processed              Boolean          @default(false)
+  depth                  Int              @default(1)
 
   companyId String  @map("company_id")
   company   Company @relation(fields: [companyId], references: [id])
+
+  parentLinkId String?      @map("parent_link_id")
+  parentLink   CompanyLink? @relation(fields: [parentLinkId], references: [id], name: "companyLinkDepth")
 
   contents CompanyLinkContent[]
 
   scrappedStart DateTime? @map("scrapped_start")
   scrappedEnd   DateTime? @map("scrapped_end")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @default(now()) @updatedAt
+  childLinks CompanyLink[] @relation(name: "companyLinkDepth")
 
   @@map("company_link")
 }

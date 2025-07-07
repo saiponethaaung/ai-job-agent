@@ -3,6 +3,13 @@ import puppeteer, { Page } from 'puppeteer';
 
 @Injectable()
 export class WebScraperService {
+  /**
+   *
+   * TODO: Connect with third party service for ip rotation to avoid rate limit and bloacking
+   * Possible services
+   * - scrapy and zyte
+   */
+
   // Accept only url object to make sure url is correct one
   async getInstance(link: URL): Promise<Page> {
     const browser = await puppeteer.launch();
@@ -21,10 +28,11 @@ export class WebScraperService {
     const page = await this.getInstance(link);
 
     const links = await page.$$eval('a', (as) => as.map((a) => a.href));
+    const images = await page.$$eval('img', (as) => as.map((a) => a.src));
     const content = await page.content();
 
     return {
-      links,
+      links: [...links, ...images],
       content,
     };
   }

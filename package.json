@@ -8,8 +8,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "turbo": "latest",
-    "prettier": "^3.2.5"
+    "@types/jsdom": "^21.1.7",
+    "prettier": "^3.2.5",
+    "turbo": "latest"
   },
   "packageManager": "bun@1.0.35",
   "workspaces": [
@@ -17,6 +18,9 @@
     "packages/*"
   ],
   "dependencies": {
+    "@nestjs/schedule": "^6.0.0",
+    "checksum": "^1.0.0",
+    "jsdom": "^26.1.0",
     "prisma": "^6.11.1"
   }
 }

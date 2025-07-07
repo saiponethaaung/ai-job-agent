@@ -1,7 +1,8 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ScraperService } from './scraper.service';
-import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { ScrapeCompanyPayload } from 'utils/kafka-payload/company';
+// import { Cron } from '@nestjs/schedule';
 
 @Controller({ path: '/scraper' })
 export class ScraperController {
@@ -9,23 +10,22 @@ export class ScraperController {
 
   @Get('test')
   async testScraper() {
-    const respsonse = await this.service.processCompanies();
+    const respsonse = await this.service.processCompanies({
+      companyId: '0197dbec-7bca-7142-8a78-54852cd08800',
+    });
     return respsonse;
   }
 
-  @Get('send-event')
-  async sendEvent() {
-    // await this.client.emit('scrape-content', { key: 'key' });
-    // const result = await lastValueFrom(
-    //   this.client.emit('scrape-content', { key: 'ley' }),
-    // );
-    // console.log('Message emitted to Kafka successfully:', result);
-    // return { success: true, message: 'Message sent to Kafka', result };
-    // console.log('ASd');
+  @MessagePattern('scrape-company')
+  async scrappedCompany(@Payload() payload: ScrapeCompanyPayload) {
+    await this.service.processCompanies({
+      companyId: payload.companyId,
+    });
   }
 
-  @MessagePattern('scrape-content')
-  async handleEvent(@Payload() payload: any) {
-    console.log('handle-event', payload);
-  }
+  // @Cron()
+  // async scheduleInternalScrapping() {}
+
+  // @Cron()
+  // async validateContentType{}
 }

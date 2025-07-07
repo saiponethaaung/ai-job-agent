@@ -9,6 +9,17 @@ export class CompanyService {
   async createCompany(data: Prisma.CompanyCreateInput) {
     const url = new URL(data.website);
     data.website = url.protocol + '//' + url.host;
+
+    const company = await this.prismaService.company.findFirst({
+      where: {
+        website: data.website,
+      },
+    });
+
+    if (company) {
+      return company;
+    }
+
     return await this.prismaService.company.create({ data });
   }
 }

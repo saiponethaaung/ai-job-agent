@@ -8,22 +8,11 @@ import { EnduserModule } from './modules/enduser/enduser.module';
 import { PrismaModule } from 'libs/prisma/prisma.mdoule';
 import { AgentModule } from './modules/agent/agent.module';
 import { ClientModule } from 'libs/client/client.module';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'SCRAPER', // This name should match the token you use for @Inject()
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'scraper-client', // Unique ID for your client
-            brokers: ['localhost:9092'], // Your Kafka broker address
-          },
-        },
-      },
-    ]),
+    ScheduleModule.forRoot(),
     ClientModule,
     PrismaModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
